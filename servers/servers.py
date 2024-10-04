@@ -11,7 +11,6 @@ import sys
 import time
 import zmq
 import json
-from queue import Queue, Full, Empty
 import matplotlib.pyplot as plt
 from kalmanfilter import KF
 from kalmanfilter import EKF
