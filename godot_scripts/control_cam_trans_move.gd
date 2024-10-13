@@ -29,7 +29,7 @@ func _process(delta):
 			progress += speed * delta
 		#if reached the end of path
 		elif progress >= path_length:
-			#stop (logic needs revising as reaching the end sends the camera back)
+			#stop
 			progress = 1.0 
 			
 	#same goes for user's input "ui_down"		
