@@ -815,21 +815,8 @@ if __name__ == "__main__":
         # Calculate and print performance statistics
         elapsed_time = time.time() - start_time
         total_measurements = len(measurement_x_excavator)
-        print(f"Total measurements: {total_measurements}")
-        print(f"Elapsed time: {elapsed_time:.2f} seconds")
-        print(f"Average FPS measurement server: {total_measurements / elapsed_time:.2f}")  # noqa
-        print(f"Average FPS for receiving frames: {number_frames_received / elapsed_time:.2f}")  # noqa
-
         # Plot and save data
         plot_and_save_data()
 
         # Evaluate and save results
         evaluate_and_save_results()
-
-        # Print data lengths for debugging
-        print(f"length measurement_x: {len(measurement_x_excavator)}")
-        print(f"length measurement_z: {len(measurement_z_excavator)}")
-        print(f"length estimated_x_ekf_excavator: {len(estimated_x_ekf_excavator)}")  # noqa
-        print(f"length estimated_z_ekf_excavator: {len(estimated_z_ekf_excavator)}")  # noqa
-        print(f"length predictions: {len(predicted_x_excavator)}")
-        print(f"last frame processed: {last_processed_frame_number}")

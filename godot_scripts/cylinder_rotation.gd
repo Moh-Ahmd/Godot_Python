@@ -7,7 +7,7 @@ var rotation_dir = 0.0
 
 func _process(delta):
 	#rotation input:
-	#ui_left: keyboard arrow to the left, s. Key mappings(should be added in a seperate readme.txt later!)
+	#ui_left: keyboard arrow to the left
 	if Input.is_action_pressed("ui_left"): 
 		rotation_dir -= 1
 	#ui_right: to the right

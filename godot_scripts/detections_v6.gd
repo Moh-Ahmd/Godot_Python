@@ -45,10 +45,6 @@ func connect_t_server():
 func _on_detections_updated(new_detections):
 	detections = new_detections
 	print("Received new detections: ", new_detections.size())
-	#print("--------------------------------------------------------------------")
-	#print("detections: ", detections)
-	#print("--------------------------------------------------------------------")
-	
 	while new_detections.size() > line_nodes.size():
 		var line = Line2D.new()
 		line.width = 2
@@ -104,139 +100,6 @@ func pixel_to_world(x_pixel, y_pixel):
 	var vector = Vector3(intersection_point.x, 0.0, intersection_point.z)
 
 	return vector
-
-#func _process_measurements():
-	#var coords_dict = {}
-	#var current_time = Time.get_ticks_msec() / 1000.0
-#
-	#for detection in detections:
-		#var label = detection["label"]
-		#if label != "worker" and label != "excavator":
-			#continue
-#
-		#var center = detection["center"]
-		#var world_coords = pixel_to_world(center[0], center[1])
-		#if world_coords == null:
-			#continue
-#
-		#var float_array = PackedFloat32Array()
-		#float_array.append(world_coords.x)
-		#float_array.append(world_coords.z)
-		#var excavator_node = get_node("/root/main/excavator")
-		#var global_x_excavator = excavator_node.global_transform.origin.x
-		#var global_z_excavator = excavator_node.global_transform.origin.z
-		#var velocity_x_excavator = excavator_node.linear_velocity.x
-		#var velocity_z_excavator = excavator_node.linear_velocity.z
-		#
-		#var worker_node = get_node("/root/main/Path_Worker1/PathFollow3D/worker_1")
-		#var global_x_worker = worker_node.global_transform.origin.x
-		#var global_z_worker = worker_node.global_transform.origin.z
-		#var velocity_x_worker = worker_node.linear_velocity.x 
-		#var velocity_z_worker = worker_node.linear_velocity.z
-		#
-		#if not label in previous_positions:
-			#previous_positions[label] = Vector2(world_coords.x, world_coords.z)
-			#previous_velocities[label] = Vector2(0, 0)
-			#previous_times[label] = current_time
-		#else:
-			#var delta_time = current_time - previous_times[label]
-			#var velocity = Vector2()
-			#var acceleration = Vector2()
-#
-			#if delta_time > 0:
-				#velocity.x = (world_coords.x - previous_positions[label].x) / delta_time
-				#velocity.y = (world_coords.z - previous_positions[label].y) / delta_time
-				#acceleration.x = (velocity.x - previous_velocities[label].x) / delta_time
-				#acceleration.y = (velocity.y - previous_velocities[label].y) / delta_time
-#
-			#previous_positions[label] = Vector2(world_coords.x, world_coords.z)
-			#previous_velocities[label] = velocity
-			#previous_times[label] = current_time
-#
-			#float_array.append(velocity.x)
-			#float_array.append(velocity.y)
-			#float_array.append(acceleration.x)
-			#float_array.append(acceleration.y)
-#
-		#while float_array.size() < 6:
-			#float_array.append(0)
-#
-		#coords_dict[label] = [float_array]
-
-	#if coords_dict:
-		#var buffer_string = JSON.stringify(coords_dict)
-		##print("******************************************************")
-		##print("buffer_string coords_dict: ", buffer_string)
-		##print("******************************************************")
-		#var buffer = buffer_string.to_utf8_buffer()
-		#measurement_buffer.append(buffer)
-#func _process_measurements():
-	#var coords_dict = {}
-	#var current_time = Time.get_ticks_msec() / 1000.0
-#
-	## Get positions and velocities
-	#var excavator_node = get_node("/root/main/excavator")
-	#var global_position_excavator = excavator_node.global_transform.origin
-	#var global_x_excavator = global_position_excavator.x
-	#var global_z_excavator = global_position_excavator.z
-#
-	## Calculate excavator velocity
-	#var velocity_excavator = Vector3.ZERO
-	#if previous_time > 0:
-		#var time_delta = current_time - previous_time
-		#if time_delta > 0:
-			#velocity_excavator = (global_position_excavator - previous_excavator_position) / time_delta
-	#var velocity_x_excavator = velocity_excavator.x
-	#var velocity_z_excavator = velocity_excavator.z
-#
-	## Update previous position and time for next frame
-	#previous_excavator_position = global_position_excavator
-	#previous_time = current_time
-	#
-	#var worker_node = get_node("/root/main/Path_Worker1/PathFollow3D/worker_1")
-	#var global_position_worker = worker_node.global_position
-	#var global_x_worker = global_position_worker.x
-	#var global_z_worker = global_position_worker.z
-	#var velocity_worker = worker_node.velocity
-	#var velocity_x_worker = velocity_worker.x
-	#var velocity_z_worker = velocity_worker.z
-#
-	#for detection in detections:
-		#var label = detection["label"]
-		#if label != "worker" and label != "excavator":
-			#continue
-#
-		#var center = detection["center"]
-		#var world_coords = pixel_to_world(center[0], center[1])
-		#if world_coords == null:
-			#continue
-#
-		#var float_array = PackedFloat32Array()
-		#float_array.append(world_coords.x)
-		#float_array.append(world_coords.z)
-#
-		## Append true positions and velocities
-		#if label == "worker":
-			#float_array.append(global_x_worker)
-			#float_array.append(global_z_worker)
-			#float_array.append(velocity_x_worker)
-			#float_array.append(velocity_z_worker)
-		#elif label == "excavator":
-			#float_array.append(global_x_excavator)
-			#float_array.append(global_z_excavator)
-			#float_array.append(velocity_x_excavator)
-			#float_array.append(velocity_z_excavator)
-#
-		## Ensure the array has 6 elements (2 for detected position, 2 for true position, 2 for true velocity)
-		#while float_array.size() < 6:
-			#float_array.append(0)
-#
-		#coords_dict[label] = [float_array]
-#
-	#if coords_dict:
-		#var buffer_string = JSON.stringify(coords_dict)
-		#var buffer = buffer_string.to_utf8_buffer()
-		#measurement_buffer.append(buffer)
 
 func _process_measurements():
 	var coords_dict = {}
@@ -361,10 +224,6 @@ func _send_measurements():
 		if size_msg == "<ACK_SIZE>":
 			tcp_socket.put_data(buffer)
 
-#func _exit_tree():
-	#if is_connected:
-		#tcp_socket.disconnect_from_host()
-		#print("Disconnected from measurement server")
 func _exit_tree():
 	if is_connected:
 		tcp_socket.put_data("<SHUTDOWN>".to_utf8_buffer())

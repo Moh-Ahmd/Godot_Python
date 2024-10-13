@@ -76,11 +76,9 @@ func _process_detection_buffer():
 		
 		if start_index != -1 and end_index != -1 and start_index < end_index:
 			var detection_json = detection_buffer.substr(start_index + 7, end_index - start_index - 7)
-			#print("Extracted JSON: ", detection_json)
 			var detection_result = JSON.parse_string(detection_json)
 			
 			if detection_result and "detections" in detection_result:
-				#print("Received detections for frame: ", detection_result.get("frame_number", "unknown"))
 				emit_signal("detections_updated", detection_result['detections'])
 				frames_received += 1
 			else:
@@ -100,7 +98,6 @@ func _receive_detection_result():
 	json_len += json_pb_array[2] << 8  
 	json_len += json_pb_array[3]  
 	print("Expected message length: ", json_len)
-	#print(json_len)
 	#initialize an empty PackedByteArray 
 	var json_data = PackedByteArray()
 	while len(json_data) < json_len:
@@ -111,21 +108,10 @@ func _receive_detection_result():
 		var json_string = json_data.get_string_from_utf8()
 		print("Received message: ", json_string)
 		detection_buffer += json_string
-		#print("Received detection result for frame: ", detection_buffer.get("frame_number", "unknown"))
 		frames_received += 1
 		_process_detection_buffer()
 
 
-#func _exit_tree():
-	#if is_frame_server_connected:
-		#frame_socket.disconnect_from_host()
-		##print("Disconnected from frame server")
-	#if is_result_server_connected:
-		#result_socket.disconnect_from_host()
-		##print("Disconnected from result server")
-	##print("Final statistics:")
-	##print("Total frames sent: ", frames_sent)
-	##print("Total frames with detections received: ", frames_received)
 func _exit_tree():
 	if is_frame_server_connected:
 		frame_socket.put_data("<SHUTDOWN>".to_utf8_buffer())

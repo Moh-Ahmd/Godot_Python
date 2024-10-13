@@ -13,42 +13,40 @@ class KF:
         self.P = np.eye(4)
 
         # state transmition matrix (under the assumption, velocity is constant)
-        self.F = np.array([
-            [1.0, dt, 0.0, 0.0],
-            [0.0, 1.0, 0.0, 0.0],
-            [0.0, 0.0, 1.0, dt],
-            [0.0, 0.0, 0.0, 1.0]
-        ])
+        self.F = np.array(
+            [
+                [1.0, dt, 0.0, 0.0],
+                [0.0, 1.0, 0.0, 0.0],
+                [0.0, 0.0, 1.0, dt],
+                [0.0, 0.0, 0.0, 1.0],
+            ]
+        )
 
         # Process noise covariance matrix
         self.Q = np.eye(4) * 0.1
         # Observation Matrix, observing positions and not velocities
-        self.H = np.array([
-            [1.0, 0.0, 0.0, 0.0],
-            [0.0, 0.0, 1.0, 0.0]
-        ])
+        self.H = np.array([[1.0, 0.0, 0.0, 0.0], [0.0, 0.0, 1.0, 0.0]])
         # Measurement Noise Covariance
         self.R = np.eye(2) * 0.1
 
     def predict(self):
-        '''
-            this method only updates (calculates)
-            the state prediction and the error covariance
-        '''
+        """
+        this method only updates (calculates)
+        the state prediction and the error covariance
+        """
         # state prediction
         self.x = self.F @ self.x
-        # error covariance prediction
-        # self.P = self.F @ self.P @ self.F.T + self.Q
 
+        # error covariance prediction
         self.P = self.F @ (self.P @ self.F.T) + self.Q
         return self.x, self.P
 
     def estimate(self, measurement):
-        '''
-            this method calculates the estimate of the
-            state vector, the Kalman Gain and updates
-            the Error covariance.
-        '''
+        """
+        this method calculates the estimate of the
+        state vector, the Kalman Gain and updates
+        the Error covariance.
+        """
 
         # True Measurement
         z = np.array([[measurement[0]], [measurement[1]]])
@@ -82,16 +80,11 @@ class EKF:
         initial_vz,
         initial_theta,
         initial_omega,
-        dt
+        dt,
     ):
         self.dt = dt
         self.x = np.array(
-            [initial_x,
-             initial_z,
-             initial_vx,
-             initial_vz,
-             initial_theta,
-             initial_omega]
+            [initial_x, initial_z, initial_vx, initial_vz, initial_theta, initial_omega]
         )
         self.P = np.eye(6) * 1000  # High initial uncertainty
 
@@ -104,38 +97,37 @@ class EKF:
     def predict(self):
         # State transition function
         x, z, vx, vz, theta, omega = self.x
-        self.x = np.array([
-            x + vx * self.dt,
-            z + vz * self.dt,
-            vx,
-            vz,
-            theta + omega * self.dt,
-            omega
-        ])
+        self.x = np.array(
+            [x + vx * self.dt, z + vz * self.dt, vx, vz, theta + omega * self.dt, omega]
+        )
 
         # Jacobian of state transition function
-        F = np.array([
-            [1, 0, self.dt, 0, 0, 0],
-            [0, 1, 0, self.dt, 0, 0],
-            [0, 0, 1, 0, 0, 0],
-            [0, 0, 0, 1, 0, 0],
-            [0, 0, 0, 0, 1, self.dt],
-            [0, 0, 0, 0, 0, 1]
-        ])
+        F = np.array(
+            [
+                [1, 0, self.dt, 0, 0, 0],
+                [0, 1, 0, self.dt, 0, 0],
+                [0, 0, 1, 0, 0, 0],
+                [0, 0, 0, 1, 0, 0],
+                [0, 0, 0, 0, 1, self.dt],
+                [0, 0, 0, 0, 0, 1],
+            ]
+        )
 
         self.P = F @ self.P @ F.T + self.Q
         return self.x
 
     def update(self, measurement):
         # Measurement function
-        H = np.array([
-            [1, 0, 0, 0, 0, 0],
-            [0, 1, 0, 0, 0, 0],
-            [0, 0, 1, 0, 0, 0],
-            [0, 0, 0, 1, 0, 0],
-            [0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0]
-        ])
+        H = np.array(
+            [
+                [1, 0, 0, 0, 0, 0],
+                [0, 1, 0, 0, 0, 0],
+                [0, 0, 1, 0, 0, 0],
+                [0, 0, 0, 1, 0, 0],
+                [0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0],
+            ]
+        )
 
         y = measurement - H @ self.x
         S = H @ self.P @ H.T + self.R
